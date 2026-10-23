@@ -10,7 +10,7 @@ public class Setor
   ///0 normal; 1 oculto; 2 privado.
   private int tiposetor; 
   ///Vetor de vírus que armazena os inimigos gerados para a batalha.
-  private Virus[] inimigos;
+  private Entidade[] inimigos;
 
   public Setor(boolean paredecima, boolean paredebaixo, boolean paredeesq, boolean parededir, int tiposetor)
   {
@@ -81,11 +81,11 @@ public class Setor
     }
   }
 
-  public Virus[] getinimigos()
+  public Entidade[] getinimigos()
   {
     return this.inimigos;
   }
-  public void setinimigos(Virus[] inimigos)
+  public void setinimigos(Entidade[] inimigos)
   {
     if (inimigos != null)
     {
@@ -93,12 +93,17 @@ public class Setor
     }
   }
 
-  ///Dado a posição do Virus no vetor de inimigos, o instancia.
-  public void instanciarVirus(int posicao, int atk, int def, int locx, int locy)
+  public Entidade getinimigo(int posicao)
+  {
+    return this.inimigos[posicao];
+  }
+
+  ///Dado a posição do Inimigo no vetor de inimigos, o instancia.
+  public void instanciarInimigo(int posicao, int atk, int def, int locx, int locy)
   {
     if (this.getinimigos() != null)
     {
-      this.inimigos[posicao] = new Virus(atk, def, locx, locy);
+      this.inimigos[posicao] = new Entidade(atk, def, locx, locy);
     }
   }
 

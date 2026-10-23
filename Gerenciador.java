@@ -105,7 +105,7 @@ public class Gerenciador
       this.mapa[X_INICIAL][Y_INICIAL].setvisitado(true);
     }
    }
-
+  
   ///Imprime os Jogadores e todos os setores do mapa. 
   /// Feito para debug, remover depois.
    public void imprimirJogo()

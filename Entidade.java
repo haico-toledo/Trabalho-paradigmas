@@ -1,4 +1,4 @@
-public abstract class Entidade
+public class Entidade
 {
   ///As classes JogadorN, JogadorS e Virus herdam dessa classe abstrata.
   ///Ou  seja, objetos dessas classes podem usar os metodos de Entidade.
@@ -67,6 +67,15 @@ public abstract class Entidade
     if (nova_locy >= 0)
     {
       this.locy = nova_locy;
+    }
+  }
+
+  public void atacar(Entidade alvo)
+  {
+    if (alvo != null)
+    {
+     int dano = this.getatk();
+     alvo.setdef(alvo.getdef() - dano);
     }
   }
 

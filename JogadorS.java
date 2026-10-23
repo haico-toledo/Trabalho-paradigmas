@@ -6,15 +6,12 @@ public class JogadorS extends JogadorN
     super(atk, def, locx, locy);
   }
 
-  ///Soma 2 a própria defesa.
-  public void recuperarDef()
+  ///Soma 2 a defesa do alvo.
+  public void recuperarDef(Entidade alvo)
   {
-    this.setdef(this.getdef() + 2);
-  }
-
-  ///Soma 2 a defesa do JogadorN dado como argumento.
-  public void recuperarDef(JogadorN alvo)
-  {
-    alvo.setdef(alvo.getdef() + 2);
+    if (alvo instanceof JogadorN || alvo instanceof JogadorS)
+    {
+      alvo.setdef(alvo.getdef() + 2);
+    }
   }
 }
