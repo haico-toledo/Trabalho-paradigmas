@@ -1,4 +1,4 @@
-public abstract class Entidade
+public class Entidade
 {
   ///As classes JogadorN, JogadorS e Virus herdam dessa classe abstrata.
   ///Ou  seja, objetos dessas classes podem usar os metodos de Entidade.
@@ -12,17 +12,17 @@ public abstract class Entidade
 
   public Entidade(int atk, int def, int locx, int locy)
   {
-    this.setatk(atk);
-    this.setdef(def);
-    this.setlocx(locx);
-    this.setlocy(locy);
+    this.setAtk(atk);
+    this.setDef(def);
+    this.setLocx(locx);
+    this.setLocy(locy);
   }
 
-  public int getatk()
+  public int getAtk()
   {
     return this.atk;
   }
-  public void setatk(int novo_atk)
+  public void setAtk(int novo_atk)
   {
     if (novo_atk > 0)
     {
@@ -30,11 +30,11 @@ public abstract class Entidade
     }
   }
 
-  public int getdef()
+  public int getDef()
   {
     return this.def;
   }
-  public void setdef(int nova_def)
+  public void setDef(int nova_def)
   {
     if (nova_def < 0)
     {
@@ -46,11 +46,11 @@ public abstract class Entidade
     }
   }
 
-  public int getlocx()
+  public int getLocx()
   {
     return this.locx;
   }
-  public void setlocx(int nova_locx)
+  public void setLocx(int nova_locx)
   {
     if (nova_locx >= 0)
     {
@@ -58,11 +58,11 @@ public abstract class Entidade
     }
   }
 
-  public int getlocy()
+  public int getLocy()
   {
     return this.locy;
   }
-  public void setlocy(int nova_locy)
+  public void setLocy(int nova_locy)
   {
     if (nova_locy >= 0)
     {
@@ -70,9 +70,18 @@ public abstract class Entidade
     }
   }
 
+  public void atacar(Entidade alvo)
+  {
+    if (alvo != null)
+    {
+     int dano = this.getAtk();
+     alvo.setDef(alvo.getDef() - dano);
+    }
+  }
+
   ///Feito pra debug, remover depois.
   public void imprimirAtributos()
   {
-    System.out.printf("ATK: %d %nDEF: %d %nLOCX: %d %nLOCY: %d %n", this.getatk(), this.getdef(), this.getlocx(), this.getlocy());
+    System.out.printf("ATK: %d %nDEF: %d %nLOCX: %d %nLOCY: %d %n", this.getAtk(), this.getDef(), this.getLocx(), this.getLocy());
   }
 }

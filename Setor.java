@@ -10,58 +10,58 @@ public class Setor
   ///0 normal; 1 oculto; 2 privado.
   private int tiposetor; 
   ///Vetor de vírus que armazena os inimigos gerados para a batalha.
-  private Virus[] inimigos;
+  private Entidade[] inimigos;
 
   public Setor(boolean paredecima, boolean paredebaixo, boolean paredeesq, boolean parededir, int tiposetor)
   {
-    this.setparedecima(paredecima);
-    this.setparedebaixo(paredebaixo);
-    this.setparedeesq(paredeesq);
-    this.setparededir(parededir); 
-    this.settiposetor(tiposetor);
+    this.setParedecima(paredecima);
+    this.setParedebaixo(paredebaixo);
+    this.setParedeesq(paredeesq);
+    this.setParededir(parededir); 
+    this.setTiposetor(tiposetor);
   }
 
-  public boolean getparedecima()
+  public boolean getParedecima()
   {
     return this.paredecima;
   }
-  public void setparedecima(boolean paredecima)
+  public void setParedecima(boolean paredecima)
   {
     this.paredecima = paredecima;
   }
 
-  public boolean getparedebaixo()
+  public boolean getParedebaixo()
   {
     return this.paredebaixo;
   }
-  public void setparedebaixo(boolean paredebaixo)
+  public void setParedebaixo(boolean paredebaixo)
   {
     this.paredebaixo = paredebaixo;
   }
 
-  public boolean getparedeesq()
+  public boolean getParedeesq()
   {
     return this.paredeesq;
   }
-  public void setparedeesq(boolean paredeesq)
+  public void setParedeesq(boolean paredeesq)
   {
     this.paredeesq = paredeesq;
   }
 
-  public boolean getparededir()
+  public boolean getParededir()
   {
     return this.parededir;
   }
-  public void setparededir(boolean parededir)
+  public void setParededir(boolean parededir)
   {
     this.parededir = parededir;
   }
 
-  public boolean getvisitado()
+  public boolean getVisitado()
   {
     return this.visitado;
   }
-  public void setvisitado(boolean visitado)
+  public void setVisitado(boolean visitado)
   {
     if (this.visitado != true)
     {
@@ -69,11 +69,11 @@ public class Setor
     }
   }
 
-  public int gettiposetor()
+  public int getTiposetor()
   {
     return this.tiposetor;
   }
-  public void settiposetor(int tiposetor)
+  public void setTiposetor(int tiposetor)
   {
     if (tiposetor >= 0 && tiposetor < 3)
     {
@@ -81,11 +81,11 @@ public class Setor
     }
   }
 
-  public Virus[] getinimigos()
+  public Entidade[] getInimigos()
   {
     return this.inimigos;
   }
-  public void setinimigos(Virus[] inimigos)
+  public void setInimigos(Entidade[] inimigos)
   {
     if (inimigos != null)
     {
@@ -93,18 +93,23 @@ public class Setor
     }
   }
 
-  ///Dado a posição do Virus no vetor de inimigos, o instancia.
-  public void instanciarVirus(int posicao, int atk, int def, int locx, int locy)
+  public Entidade getInimigo(int posicao)
   {
-    if (this.getinimigos() != null)
+    return this.inimigos[posicao];
+  }
+
+  ///Dado a posição do Inimigo no vetor de inimigos, o instancia.
+  public void instanciarInimigo(int posicao, int atk, int def, int locx, int locy)
+  {
+    if (this.getInimigos() != null)
     {
-      this.inimigos[posicao] = new Virus(atk, def, locx, locy);
+      this.inimigos[posicao] = new Entidade(atk, def, locx, locy);
     }
   }
 
   ///Imprime os atributos do objeto. Feito para debug.
   public void imprimirSetor()
   {
-    System.out.printf("PAREDE EM CIMA: %b %nPAREDE EMBAIXO: %b %nPAREDE NA ESQUERDA: %b %nPAREDE NA DIREITA: %b %nTIPO: %d %n %n", this.getparedecima(), this.getparedebaixo(), this.getparedeesq(), this.getparededir(), this.gettiposetor());
+    System.out.printf("PAREDE EM CIMA: %b %nPAREDE EMBAIXO: %b %nPAREDE NA ESQUERDA: %b %nPAREDE NA DIREITA: %b %nTIPO: %d %n %n", this.getParedecima(), this.getParedebaixo(), this.getParedeesq(), this.getParededir(), this.getTiposetor());
   }
 }
