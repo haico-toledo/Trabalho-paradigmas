@@ -137,54 +137,55 @@ public class Gerenciador
   }
   
   //passar a funcao lerEntrada no parametro tecla para movimentar o jogador com base na entrada do teclado
-  public void movimentarEntidade(JogadorN p1, JogadorS p2, char tecla)
+  public void movimentarEntidade(char tecla)
   {
     switch (tecla)
     {
       case 'w':
-        if (p1.locy < MAX_Y_MAPA)
-          p1.locy--;
+        if (this.p1.locy > 0)
+          this.p1.locy--;
         break;
       case 'a':
-        if (p1.locx < MAX_X_MAPA)
-          p1.locx--;
+        if (this.p1.locx > 0)
+          this.p1.locx--;
         break;
       case 'd':
-        if (p1.locx < MAX_X_MAPA)
-          p1.locx++;
+        if (this.p1.locx < MAX_X_MAPA)
+          this.p1.locx++;
         break;
       case 's':
-        if (p1.locy < MAX_Y_MAPA)
-          p1.locy++;
+        if (this.p1.locy < MAX_Y_MAPA)
+          this.p1.locy++;
         break;
       default:
         break;
     }
-    this.mapa[p1.locy][p1.locx].setVisitado(true);
+    this.mapa[this.p1.locy][this.p1.locx].setVisitado(true);
 
-    if (p2 != null) {
+    if (this.p2 != null) {
       switch (tecla)
       {
       case '8':
-        if (p2.locy < MAX_Y_MAPA)
-          p2.locy++;
+        if (this.p2.locy > 0)
+          this.p2.locy--;
         break;
       case '4':
-        if (p2.locx < MAX_X_MAPA)
-          p2.locx--;
+        if (this.p2.locx > 0)
+          this.p2.locx--;
         break;
       case '6':
-        if (p2.locx < MAX_X_MAPA)
-          p2.locx++;
+        if (this.p2.locx < MAX_X_MAPA)
+          this.p2.locx++;
         break;
       case '5':
-        if (p2.locy < MAX_Y_MAPA)
-          p2.locy--;
+        if (this.p2.locy < MAX_Y_MAPA)
+          this.p2.locy++;
         break;
       default:
         break;
       }
       this.mapa[p2.locy][p2.locx].setVisitado(true);
+      System.out.println(p1.locy + "," + p1.locx);
     }
   }
 

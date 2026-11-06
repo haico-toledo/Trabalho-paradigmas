@@ -2,8 +2,9 @@
 //HAICO DE TOLEDO BOEHS GRR20253482
 
 public class Principal {
-    public static void main()
+    public static void main(String args[])
     {
+        Entrada entrada = new Entrada();
         Gerenciador ger = new Gerenciador();
         boolean continuar = true;
 
@@ -12,7 +13,7 @@ public class Principal {
         while (continuar) 
         {
             ger.desenharMapa();
-            ger.movimentarEntidade(ger.p1, ger.p2, ger.lerEntrada());
+            ger.movimentarEntidade(entrada.lerEntrada());
         }
     }
 }
