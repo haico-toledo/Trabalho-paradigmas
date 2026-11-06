@@ -137,56 +137,77 @@ public class Gerenciador
   }
   
   //passar a funcao lerEntrada no parametro tecla para movimentar o jogador com base na entrada do teclado
-  public void movimentarEntidade(char tecla)
+  public boolean movimentarPlayer1(char tecla)
   {
     switch (tecla)
     {
       case 'w':
         if (this.p1.locy > 0)
           this.p1.locy--;
+        else
+          return false;
         break;
       case 'a':
         if (this.p1.locx > 0)
           this.p1.locx--;
+        else
+          return false;
         break;
       case 'd':
         if (this.p1.locx < MAX_X_MAPA)
           this.p1.locx++;
+        else
+          return false;
         break;
       case 's':
         if (this.p1.locy < MAX_Y_MAPA)
           this.p1.locy++;
+        else
+          return false;
         break;
       default:
-        break;
+        return false;
     }
     this.mapa[this.p1.locy][this.p1.locx].setVisitado(true);
+    return true;
+  }
 
+  public boolean movimentarPlayer2(char tecla)
+  {
     if (this.p2 != null) {
       switch (tecla)
       {
       case '8':
         if (this.p2.locy > 0)
           this.p2.locy--;
+        else
+          return false;
         break;
       case '4':
         if (this.p2.locx > 0)
           this.p2.locx--;
+        else
+          return false;
         break;
       case '6':
         if (this.p2.locx < MAX_X_MAPA)
           this.p2.locx++;
+        else
+          return false;
         break;
       case '5':
         if (this.p2.locy < MAX_Y_MAPA)
           this.p2.locy++;
+        else
+          return false;
         break;
       default:
-        break;
+        return false;
       }
       this.mapa[p2.locy][p2.locx].setVisitado(true);
-      System.out.println(p1.locy + "," + p1.locx);
+      return true;
     }
+    return false;
   }
 
   private void desenharCabecalho() 

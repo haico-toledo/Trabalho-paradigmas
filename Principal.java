@@ -13,7 +13,19 @@ public class Principal {
         while (continuar) 
         {
             ger.desenharMapa();
-            ger.movimentarEntidade(entrada.lerEntrada());
+            System.out.println("Turno do Player 1");
+            while(!(ger.movimentarPlayer1(entrada.lerEntrada())))
+            {
+                System.out.println("Jogada inválida, tente novamente.");
+            }
+            // acao player 1
+            ger.desenharMapa();
+            System.out.println("Turno do Player 2");
+            while(!(ger.movimentarPlayer2(entrada.lerEntrada())))
+            {
+                System.out.println("Jogada inválida, tente novamente.");
+            }
+            // acao player 2
         }
     }
 }
