@@ -11,7 +11,8 @@ public class Principal {
          //e a cada iteracao do loop, printamos o tabuleiro
         while (continuar) 
         {
-            ger.movimentaEntidade(ger.p1, ger.p2, ger.lerEntrada());
+            ger.desenharMapa();
+            ger.movimentarEntidade(ger.p1, ger.p2, ger.lerEntrada());
         }
     }
 }

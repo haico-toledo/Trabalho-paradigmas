@@ -21,6 +21,7 @@ public class Setor
     this.setTiposetor(tiposetor);
   }
 
+  // Aqui tem que mudar o nome para algo como isParedeCima e assim por diante
   public boolean getParedecima()
   {
     return this.paredecima;

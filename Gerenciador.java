@@ -2,70 +2,70 @@ import java.util.Scanner;
 
 public class Gerenciador
 {
-   private static final int ATK_INICIAL_P1 = 2;
-   private static final int DEF_INICIAL_P1 = 6;
-   private static final int ATK_INICIAL_P2 = 1;
-   private static final int DEF_INICIAL_P2 = 7;
-   private static final int ATK_DEF_MAXIMO_INIMIGOS = 3;
-   private static final int MAX_INIMIGOS_NO_SETOR = 3;
-   private static final int PROPORCAO_MATRIZ = 5;
-   private static final int X_INICIAL = 2;
-   private static final int Y_INICIAL = 2;
-   private static final int MAX_X_MAPA = 4;
-   private static final int MAX_Y_MAPA = 4;
-   public Setor[][] mapa;
-   public JogadorN p1;
-   public JogadorS p2;
+  private static final int ATK_INICIAL_P1 = 2;
+  private static final int DEF_INICIAL_P1 = 6;
+  private static final int ATK_INICIAL_P2 = 1;
+  private static final int DEF_INICIAL_P2 = 7;
+  private static final int ATK_DEF_MAXIMO_INIMIGOS = 3;
+  private static final int MAX_INIMIGOS_NO_SETOR = 3;
+  private static final int PROPORCAO_MATRIZ = 5;
+  private static final int X_INICIAL = 2;
+  private static final int Y_INICIAL = 2;
+  private static final int MAX_X_MAPA = 4;
+  private static final int MAX_Y_MAPA = 4;
+  public Setor[][] mapa;
+  public JogadorN p1;
+  public JogadorS p2;
 
 
-   public Gerenciador()
-   {
-     this.setP1(new JogadorN(ATK_INICIAL_P1, DEF_INICIAL_P1, X_INICIAL, Y_INICIAL));
-     this.setP2(new JogadorS(ATK_INICIAL_P2, DEF_INICIAL_P2, X_INICIAL, Y_INICIAL));
-     this.setMapa();
-   }
+  public Gerenciador()
+  {
+    this.setP1(new JogadorN(ATK_INICIAL_P1, DEF_INICIAL_P1, X_INICIAL, Y_INICIAL));
+    this.setP2(new JogadorS(ATK_INICIAL_P2, DEF_INICIAL_P2, X_INICIAL, Y_INICIAL));
+    this.setMapa();
+  }
 
-   public Setor[][] getMapa()
-   {
-    return this.mapa;
-   }
-   public void setMapa()
-   {
-     if (this.mapa == null)
-     {
-       this.mapa = new Setor[PROPORCAO_MATRIZ][PROPORCAO_MATRIZ];
-       this.estabelecerMapa();
-     }
-   }
+  public Setor[][] getMapa()
+  {
+  return this.mapa;
+  }
+  public void setMapa()
+  {
+    if (this.mapa == null)
+    {
+      this.mapa = new Setor[PROPORCAO_MATRIZ][PROPORCAO_MATRIZ];
+      this.estabelecerMapa();
+    }
+  }
 
-   public JogadorN getP1()
-   {
-     return this.p1;
-   }
-   public void setP1(JogadorN p1)
-   {
-     if (p1 != null)
-     {
-        this.p1 = p1;
-     }
-   }
+  public JogadorN getP1()
+  {
+    return this.p1;
+  }
+  public void setP1(JogadorN p1)
+  {
+    if (p1 != null)
+    {
+      this.p1 = p1;
+    }
+  }
 
-   public JogadorS getP2()
-   {
-    return this.p2;
-   }
-   public void setP2(JogadorS p2)
-   {
-     if (p2 != null)
-     {
-       this.p2 = p2;
-     }
-   }
-   
+  public JogadorS getP2()
+  {
+  return this.p2;
+  }
+  public void setP2(JogadorS p2)
+  {
+    if (p2 != null)
+    {
+    this.p2 = p2;
+    }
+  }
+  
    ///Caso mapa já tenha sido alocado, estabelece o mapa do jogo.
    /// Instancia cada posição da matriz 5x5 uma por uma.
-   public void estabelecerMapa()
-   {
+  public void estabelecerMapa()
+  {
     if (this.getMapa() != null)
     {
       this.mapa[0][0] = new Setor(true, false, true, false, 1);
@@ -108,12 +108,20 @@ public class Gerenciador
 
       this.mapa[X_INICIAL][Y_INICIAL].setVisitado(true);
     }
-   }
+  }
+
+  public void desenharMapa()
+  {
+    this.desenharCabecalho();
+
+    for(int x = 0; x <= MAX_X_MAPA; x++)
+      System.out.print(this.gerarLinhaMapa(x));
+  }
   
   ///Imprime os Jogadores e todos os setores do mapa. 
   /// Feito para debug, remover depois.
-   public void imprimirJogo()
-   {
+  public void imprimirJogo()
+  {
     System.out.printf("P1: %n");
     (this.getP1()).imprimirAtributos();
     System.out.printf("P2: %n");
@@ -126,7 +134,7 @@ public class Gerenciador
           (this.mapa[x][y]).imprimirSetor();
         }
       }
-   }
+  }
   
   //retorna o primeiro caractere da entrada digitada
   public char lerEntrada()
@@ -139,17 +147,17 @@ public class Gerenciador
 
     teclado.close();
 
-    return tecla;
+    return Character.toLowerCase(tecla);
   }
 
   //passar a funcao lerEntrada no parametro tecla para movimentar o jogador com base na entrada do teclado
-  public void movimentaEntidade(JogadorN p1, JogadorS p2, char tecla)
+  public void movimentarEntidade(JogadorN p1, JogadorS p2, char tecla)
   {
     switch (tecla)
     {
       case 'w':
         if (p1.locy < MAX_Y_MAPA)
-          p1.locy++;
+          p1.locy--;
         break;
       case 'a':
         if (p1.locx < MAX_X_MAPA)
@@ -161,7 +169,7 @@ public class Gerenciador
         break;
       case 's':
         if (p1.locy < MAX_Y_MAPA)
-          p1.locy--;
+          p1.locy++;
         break;
       default:
         break;
@@ -189,5 +197,46 @@ public class Gerenciador
         break;
       }
     }
+  }
+
+  private void desenharCabecalho() 
+  {
+    System.out.println("------------------------------");
+    System.out.println("|    Antivírus por um dia    |");
+    System.out.println("------------------------------");
+    System.out.println("      1   2   3   4   5");
+    System.out.println("    |---|---|---|---|---|");
+  }
+
+  private String getConteudoSetor(int x, int y) 
+  {
+    if(x == X_INICIAL && y == Y_INICIAL) 
+      return " C ";
+    if(this.p1.locx == x && this.p1.locy == y) 
+      return "P1 ";
+    if(this.p2.locx == x && this.p2.locy == y) 
+      return "P2 ";
+
+    return "   ";
+  }
+
+  private StringBuilder gerarLinhaMapa(int y)
+  {
+    StringBuilder meio = new StringBuilder((y + 1) + "   ");
+    StringBuilder base = new StringBuilder("    |");
+
+    char charEsquerda = this.mapa[y][0].getParedeesq() ? '|' : '*';
+    meio.append(charEsquerda);
+
+    for (int x = 0; x <= MAX_X_MAPA; x++)
+    {
+      char charDireita = this.mapa[y][x].getParededir() ? '|' : '*';
+      char charBase = this.mapa[y][x].getParedebaixo() ? '-' : '*';
+
+      meio.append(getConteudoSetor(x, y)).append(charDireita);
+      base.append('-').append(charBase).append("-|");
+    }
+
+    return meio.append('\n').append(base).append('\n');
   }
 }
