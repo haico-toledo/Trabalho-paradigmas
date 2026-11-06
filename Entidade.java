@@ -74,14 +74,19 @@ public class Entidade
   {
     if (alvo != null)
     {
-     int dano = this.getAtk();
-     alvo.setDef(alvo.getDef() - dano);
+    int dano = this.getAtk();
+    alvo.setDef(alvo.getDef() - dano);
     }
   }
-
+  
   ///Feito pra debug, remover depois.
   public void imprimirAtributos()
   {
     System.out.printf("ATK: %d %nDEF: %d %nLOCX: %d %nLOCY: %d %n", this.getAtk(), this.getDef(), this.getLocx(), this.getLocy());
+  }
+
+  public String resumoAtributos()
+  {
+    return "%d/%d".formatted(this.atk, this.def);
   }
 }

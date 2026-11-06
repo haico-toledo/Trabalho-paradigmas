@@ -113,9 +113,9 @@ public class Gerenciador
   public void desenharMapa()
   {
     this.desenharCabecalho();
-
-    for(int x = 0; x <= MAX_X_MAPA; x++)
-      System.out.print(this.gerarLinhaMapa(x));
+    String[] painel = this.gerarPainel();
+    for (int y = 0; y <= MAX_Y_MAPA; y++)
+      System.out.print(this.gerarLinhaMapa(y, painel));
   }
   
   ///Imprime os Jogadores e todos os setores do mapa. 
@@ -220,7 +220,66 @@ public class Gerenciador
     return "   ";
   }
 
-  private StringBuilder gerarLinhaMapa(int y)
+  private static final int LARGURA_PAINEL = 15;
+
+  private String[] montarPainel(int x, int y, String inimigos, String jogadores, String atributos)
+  {
+    Setor s = this.mapa[y][x];
+    char cima  = s.getParedecima()  ? '-' : '*';   // ajuste ao nome real do getter
+    char baixo = s.getParedebaixo() ? '-' : '*';
+    char esq   = s.getParedeesq()   ? '|' : '*';
+    char dir   = s.getParededir()   ? '|' : '*';
+
+    String[] p = new String[2 * (MAX_Y_MAPA + 1)];
+    p[0] = "Setor [%d,%d]".formatted(x + 1, y + 1);
+    p[1] = "";
+    p[2] = "|------" + cima + "------|";
+    p[3] = "| %-11s |".formatted(inimigos);
+    p[4] = "|" + "             " + "|";
+    p[5] = esq + "             " + dir;
+    // com - antes do 11 o texto fica alinhado a esquerda e completa direita com espaços
+    p[6] = "| %-11s |".formatted(jogadores); 
+    p[7] = "| %-11s |".formatted(atributos);
+    p[8] = "|------" + baixo + "------|";
+    p[9] = "";
+    return p;
+  }
+
+  private String getInimigosPorSetor(Setor setor)
+  {
+    Entidade[] inimigos = setor.getInimigos();
+
+    if (inimigos == null) return "";
+
+    StringBuilder saida = new StringBuilder();
+    for (Entidade inimigo : setor.getInimigos())
+    {
+      if (saida.length() > 0)
+        saida.append(' ');
+      saida.append(inimigo.resumoAtributos());
+    }
+    
+    return saida.toString();
+  }
+
+  private String[] gerarPainel()
+  {
+    boolean mesmoSetor = this.p1.locx == this.p2.locx && this.p1.locy == this.p2.locy;
+
+    if (mesmoSetor)
+      return montarPainel(this.p1.locx, this.p1.locy, getInimigosPorSetor(this.mapa[this.p1.locy][this.p1.locx]), 
+        "P1    P2", this.p1.resumoAtributos() + "   " + this.p2.resumoAtributos());
+
+    String[] a = montarPainel(this.p1.locx, this.p1.locy, getInimigosPorSetor(this.mapa[this.p1.locy][this.p1.locx]), "P1", this.p1.resumoAtributos());
+    String[] b = montarPainel(this.p2.locx, this.p2.locy, getInimigosPorSetor(this.mapa[this.p2.locy][this.p2.locx]), "P2", this.p2.resumoAtributos());
+
+    String[] r = new String[a.length];
+    for (int i = 0; i < r.length; i++)
+      r[i] = String.format("%-" + LARGURA_PAINEL + "s   %s", a[i], b[i]);
+    return r;
+  }
+
+  private StringBuilder gerarLinhaMapa(int y, String[] painel)
   {
     StringBuilder meio = new StringBuilder((y + 1) + "   ");
     StringBuilder base = new StringBuilder("    |");
@@ -236,7 +295,8 @@ public class Gerenciador
       meio.append(getConteudoSetor(x, y)).append(charDireita);
       base.append('-').append(charBase).append("-|");
     }
-
+    meio.append("   ").append(painel[2 * y]);
+    base.append("   ").append(painel[2 * y + 1]);
     return meio.append('\n').append(base).append('\n');
   }
 }
