@@ -174,6 +174,8 @@ public class Gerenciador
       default:
         break;
     }
+    this.mapa[p1.locy][p1.locx].setVisitado(true);
+
     if (p2 != null) {
       switch (tecla)
       {
@@ -196,6 +198,7 @@ public class Gerenciador
       default:
         break;
       }
+      this.mapa[p2.locy][p2.locx].setVisitado(true);
     }
   }
 
@@ -252,7 +255,7 @@ public class Gerenciador
     if (inimigos == null) return "";
 
     StringBuilder saida = new StringBuilder();
-    for (Entidade inimigo : setor.getInimigos())
+    for (Entidade inimigo : inimigos)
     {
       if (saida.length() > 0)
         saida.append(' ');
@@ -284,17 +287,26 @@ public class Gerenciador
     StringBuilder meio = new StringBuilder((y + 1) + "   ");
     StringBuilder base = new StringBuilder("    |");
 
-    char charEsquerda = this.mapa[y][0].getParedeesq() ? '|' : '*';
+    Setor primeiro = this.mapa[y][0];
+    char charEsquerda = (primeiro.getVisitado() && !primeiro.getParedeesq()) ? '*' : '|';
     meio.append(charEsquerda);
 
     for (int x = 0; x <= MAX_X_MAPA; x++)
     {
-      char charDireita = this.mapa[y][x].getParededir() ? '|' : '*';
-      char charBase = this.mapa[y][x].getParedebaixo() ? '-' : '*';
+      Setor s = this.mapa[y][x];
+      Setor dir = x < MAX_X_MAPA ? this.mapa[y][x + 1] : null;
+      Setor baixo = y < MAX_Y_MAPA ? this.mapa[y + 1][x] : null;
+
+      boolean visivelDir = s.getVisitado() || (dir != null && dir.getVisitado());
+      boolean visivelBaixo = s.getVisitado() || (baixo != null && baixo.getVisitado());
+
+      char charDireita = (visivelDir && !s.getParededir()) ? '*' : '|';
+      char charBase = (visivelBaixo && !s.getParedebaixo()) ? '*' : '-';
 
       meio.append(getConteudoSetor(x, y)).append(charDireita);
       base.append('-').append(charBase).append("-|");
     }
+
     meio.append("   ").append(painel[2 * y]);
     base.append("   ").append(painel[2 * y + 1]);
     return meio.append('\n').append(base).append('\n');
