@@ -139,28 +139,29 @@ public class Gerenciador
   //passar a funcao lerEntrada no parametro tecla para movimentar o jogador com base na entrada do teclado
   public boolean movimentarPlayer1(char tecla)
   {
+    Setor setor = this.mapa[this.p1.locy][this.p1.locx];
     switch (tecla)
     {
       case 'w':
-        if (this.p1.locy > 0)
+        if (this.p1.locy > 0 && !setor.getParedecima())
           this.p1.locy--;
         else
           return false;
         break;
       case 'a':
-        if (this.p1.locx > 0)
+        if (this.p1.locx > 0 && !setor.getParedeesq())
           this.p1.locx--;
         else
           return false;
         break;
       case 'd':
-        if (this.p1.locx < MAX_X_MAPA)
+        if (this.p1.locx < MAX_X_MAPA && !setor.getParededir())
           this.p1.locx++;
         else
           return false;
         break;
       case 's':
-        if (this.p1.locy < MAX_Y_MAPA)
+        if (this.p1.locy < MAX_Y_MAPA && !setor.getParedebaixo())
           this.p1.locy++;
         else
           return false;
@@ -175,28 +176,29 @@ public class Gerenciador
   public boolean movimentarPlayer2(char tecla)
   {
     if (this.p2 != null) {
+      Setor setor = this.mapa[this.p2.locy][this.p2.locx];
       switch (tecla)
       {
       case '8':
-        if (this.p2.locy > 0)
+        if (this.p2.locy > 0 && !setor.getParedecima())
           this.p2.locy--;
         else
           return false;
         break;
       case '4':
-        if (this.p2.locx > 0)
+        if (this.p2.locx > 0  && !setor.getParedeesq())
           this.p2.locx--;
         else
           return false;
         break;
       case '6':
-        if (this.p2.locx < MAX_X_MAPA)
+        if (this.p2.locx < MAX_X_MAPA  && !setor.getParededir())
           this.p2.locx++;
         else
           return false;
         break;
       case '5':
-        if (this.p2.locy < MAX_Y_MAPA)
+        if (this.p2.locy < MAX_Y_MAPA && !setor.getParedebaixo())
           this.p2.locy++;
         else
           return false;
