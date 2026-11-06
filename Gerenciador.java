@@ -13,9 +13,9 @@ public class Gerenciador
   private static final int Y_INICIAL = 2;
   private static final int MAX_X_MAPA = 4;
   private static final int MAX_Y_MAPA = 4;
-  public Setor[][] mapa;
-  public JogadorN p1;
-  public JogadorS p2;
+  private Setor[][] mapa;
+  private JogadorN p1;
+  private JogadorS p2;
 
 
   public Gerenciador()
@@ -136,20 +136,6 @@ public class Gerenciador
       }
   }
   
-  //retorna o primeiro caractere da entrada digitada
-  public char lerEntrada()
-  {
-    Scanner teclado = new Scanner(System.in);
-    char tecla = teclado.next().charAt(0);
-    while (tecla == '\n') {
-      tecla = teclado.next().charAt(0);
-    }
-
-    teclado.close();
-
-    return Character.toLowerCase(tecla);
-  }
-
   //passar a funcao lerEntrada no parametro tecla para movimentar o jogador com base na entrada do teclado
   public void movimentarEntidade(JogadorN p1, JogadorS p2, char tecla)
   {
