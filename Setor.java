@@ -1,67 +1,68 @@
+import java.util.Random;
 public class Setor
-{
-  ///Se houver parece naquela determinada direção, deve ser true, caso contrário, false. 
+{ 
   private boolean paredecima; 
   private boolean paredebaixo;
   private boolean paredeesq;
-  private boolean parededir;
-  ///True se um jogador já adentrou o setor, false caso contrário.
+  private boolean parededir; 
   private boolean visitado;
-  ///0 normal; 1 oculto; 2 privado.
+
   private int tiposetor; 
-  ///Vetor de vírus que armazena os inimigos gerados para a batalha.
+  private int qtdinimigos;
+
   private Entidade[] inimigos;
+
 
   public Setor(boolean paredecima, boolean paredebaixo, boolean paredeesq, boolean parededir, int tiposetor)
   {
-    this.setparedecima(paredecima);
-    this.setparedebaixo(paredebaixo);
-    this.setparedeesq(paredeesq);
-    this.setparededir(parededir); 
-    this.settiposetor(tiposetor);
+    this.setParedecima(paredecima);
+    this.setParedebaixo(paredebaixo);
+    this.setParedeesq(paredeesq);
+    this.setParededir(parededir); 
+    this.setTiposetor(tiposetor);
   }
 
-  public boolean getparedecima()
+  public boolean isParedecima()
   {
     return this.paredecima;
   }
-  public void setparedecima(boolean paredecima)
+  public void setParedecima(boolean paredecima)
   {
     this.paredecima = paredecima;
   }
 
-  public boolean getparedebaixo()
+  public boolean isParedebaixo()
   {
     return this.paredebaixo;
   }
-  public void setparedebaixo(boolean paredebaixo)
+  public void setParedebaixo(boolean paredebaixo)
   {
     this.paredebaixo = paredebaixo;
   }
 
-  public boolean getparedeesq()
+  public boolean isParedeesq()
   {
     return this.paredeesq;
   }
-  public void setparedeesq(boolean paredeesq)
+  public void setParedeesq(boolean paredeesq)
   {
     this.paredeesq = paredeesq;
   }
 
-  public boolean getparededir()
+  public boolean isParededir()
   {
     return this.parededir;
   }
-  public void setparededir(boolean parededir)
+  public void setParededir(boolean parededir)
   {
     this.parededir = parededir;
   }
 
-  public boolean getvisitado()
+  public boolean isVisitado()
   {
     return this.visitado;
   }
-  public void setvisitado(boolean visitado)
+  public void setVisitado(boolean visitado)
   {
     if (this.visitado != true)
     {
@@ -69,11 +70,11 @@ public class Setor
     }
   }
 
-  public int gettiposetor()
+  public int getTiposetor()
   {
     return this.tiposetor;
   }
-  public void settiposetor(int tiposetor)
+  public void setTiposetor(int tiposetor)
   {
     if (tiposetor >= 0 && tiposetor < 3)
     {
@@ -81,11 +82,11 @@ public class Setor
     }
   }
 
-  public Entidade[] getinimigos()
+  public Entidade[] getInimigos()
   {
     return this.inimigos;
   }
-  public void setinimigos(Entidade[] inimigos)
+  public void setInimigos(Entidade[] inimigos)
   {
     if (inimigos != null)
     {
@@ -93,23 +94,31 @@ public class Setor
     }
   }
 
-  public Entidade getinimigo(int posicao)
+  public int getQtdinimigos()
+  {
+    return this.qtdinimigos;
+  }
+  public void setQtdinimigos(int qtdinimigos)
+  {
+    if (qtdinimigos >= 0)
+    {
+      this.qtdinimigos = qtdinimigos;
+    }
+  }
+
+  public Entidade getInimigo(int posicao)
   {
     return this.inimigos[posicao];
   }
 
   ///Dado a posição do Inimigo no vetor de inimigos, o instancia.
-  public void instanciarInimigo(int posicao, int atk, int def, int locx, int locy)
+  public void instanciarInimigo(int posicao, int atkdef_max, int locx, int locy)
   {
-    if (this.getinimigos() != null)
+    Random aleatorio = new Random();
+    int status = aleatorio.nextInt(atkdef_max) + 1;
+    if (this.getInimigos() != null)
     {
-      this.inimigos[posicao] = new Entidade(atk, def, locx, locy);
+      this.inimigos[posicao] = new Entidade(status, status, locx, locy);
     }
-  }
-
-  ///Imprime os atributos do objeto. Feito para debug.
-  public void imprimirSetor()
-  {
-    System.out.printf("PAREDE EM CIMA: %b %nPAREDE EMBAIXO: %b %nPAREDE NA ESQUERDA: %b %nPAREDE NA DIREITA: %b %nTIPO: %d %n %n", this.getparedecima(), this.getparedebaixo(), this.getparedeesq(), this.getparededir(), this.gettiposetor());
   }
 }

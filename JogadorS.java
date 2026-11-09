@@ -7,11 +7,19 @@ public class JogadorS extends JogadorN
   }
 
   ///Soma 2 a defesa do alvo.
-  public void recuperarDef(Entidade alvo)
+  /// retorna 1 se a vida foi recuperada e 0 c.c.
+  public int recuperarDef(Entidade alvo)
   {
-    if (alvo instanceof JogadorN || alvo instanceof JogadorS)
+    int locxp2 = this.getLocx();
+    int locyp2 = this.getLocy();
+    int locxalvo = alvo.getLocx();
+    int locyalvo = alvo.getLocy();
+    boolean juntos = (locxp2 == locxalvo && locyp2 == locyalvo);
+    if ((alvo instanceof JogadorN || alvo instanceof JogadorS) && (juntos))
     {
-      alvo.setdef(alvo.getdef() + 2);
+      alvo.setDef(alvo.getDef() + 2);
+      return 1;
     }
+    return 0;
   }
 }
