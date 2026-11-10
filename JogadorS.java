@@ -6,15 +6,20 @@ public class JogadorS extends JogadorN
     super(atk, def, locx, locy);
   }
 
-  ///Soma 2 a própria defesa.
-  public void recuperarDef()
+  ///Soma 2 a defesa do alvo.
+  /// retorna 1 se a vida foi recuperada e 0 c.c.
+  public int recuperarDef(Entidade alvo)
   {
-    this.setdef(this.getdef() + 2);
-  }
-
-  ///Soma 2 a defesa do JogadorN dado como argumento.
-  public void recuperarDef(JogadorN alvo)
-  {
-    alvo.setdef(alvo.getdef() + 2);
+    int locxp2 = this.getLocx();
+    int locyp2 = this.getLocy();
+    int locxalvo = alvo.getLocx();
+    int locyalvo = alvo.getLocy();
+    boolean juntos = (locxp2 == locxalvo && locyp2 == locyalvo);
+    if ((alvo instanceof JogadorN || alvo instanceof JogadorS) && (juntos))
+    {
+      alvo.setDef(alvo.getDef() + 2);
+      return 1;
+    }
+    return 0;
   }
 }
