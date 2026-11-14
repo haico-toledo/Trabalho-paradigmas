@@ -7,6 +7,15 @@ public class Principal {
   public static void main(String args[]) {
     Gerenciador ger = new Gerenciador();
     Entrada teclado = new Entrada();
-    ger.jogo(teclado);
+
+    while (ger.jogoEmAndamento()) {
+      ger.iniciarTurno();
+      ger.faseMovimento(teclado);
+      ger.faseAcoes(teclado);
+      ger.faseInimigos();
+      ger.encerrarTurno();
+    }
+
+    ger.mostrarResultado();
   }
 }

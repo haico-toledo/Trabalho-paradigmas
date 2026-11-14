@@ -16,6 +16,12 @@ public class Gerenciador {
   private Setor[][] mapa;
   private JogadorN p1;
   private JogadorS p2;
+  private int locxNinho;
+  private int locyNinho;
+  private int turnos = 0;
+  private int resultado = 0; // 0 = continua, -1 = P1 derrotado, -2 = vitória P1, -3 = vitória P2
+  private boolean novosInimigos;
+  private boolean juntos;
 
   public Gerenciador() {
     this.setP1(new JogadorN(ATK_INICIAL_P1, DEF_INICIAL_P1, X_INICIAL, Y_INICIAL));
@@ -32,6 +38,14 @@ public class Gerenciador {
       this.mapa = new Setor[PROPORCAO_MATRIZ][PROPORCAO_MATRIZ];
       this.estabelecerMapa();
     }
+  }
+
+  public int getLocxNinho() { 
+    return this.locxNinho;
+  }
+
+  public int getLocyNinho() {
+    return this.locyNinho; 
   }
 
   public JogadorN getP1() {
@@ -95,6 +109,9 @@ public class Gerenciador {
       }
 
       this.mapa[X_INICIAL][Y_INICIAL].setVisitado(true);
+      Random aleatorio = new Random();
+      this.locxNinho = aleatorio.nextInt(PROPORCAO_MATRIZ);
+      this.locyNinho = aleatorio.nextInt(PROPORCAO_MATRIZ);
     }
   }
 
@@ -102,7 +119,7 @@ public class Gerenciador {
   /// uma tecla, movimenta o jogador em questão.
   /// Caso p seja JogadorN utiliza WASD, caso seja um JogadorS, utiliza 8462.
   /// Retorna true se o movimento foi realizado e false c.c.
-  private boolean movimentarPlayer(JogadorN p, char tecla) {
+  public boolean movimentarPlayer(JogadorN p, char tecla) {
     if (p != null) {
       char cima;
       char esquerda;
@@ -156,7 +173,7 @@ public class Gerenciador {
   /// Além do jogador e do teclado, deve receber um vetor de tamanho 1,
   /// que por sua vez é usado para retornar os pontos de ação por referência
   /// após realizar a ação.
-  private int acaoPlayer(JogadorN p, Entrada teclado, int[] PA) {
+  public int acaoPlayer(JogadorN p, Entrada teclado, int[] PA) {
     if (p != null) {
       char atacar;
       char procurar;
@@ -274,43 +291,9 @@ public class Gerenciador {
     }
     return 0;
   }
-
-  /// Baseado no retorno de acaoPlayer(), imprime uma mensagem correspondente.
-  private void mensagemAcao(int retorno) {
-    if (retorno == 1) {
-      System.out.printf("                                                                          Ataque efetuado!%n");
-    } else if (retorno == 2) {
-      System.out.printf("                                                                          Errou o ataque!%n");
-    } else if (retorno == 3) {
-      System.out.printf(
-          "                                                                          Este setor é privado. Não foi possível procurar.%n");
-    } else if (retorno == 4) {
-      System.out.printf(
-          "                                                                          Você recuperou 1 de DEF!%n");
-    } else if (retorno == 5) {
-      System.out.printf(
-          "                                                                          Você recuperou 2 de DEF!%n");
-    } else if (retorno == 6) {
-      System.out.printf(
-          "                                                                          Causou 1 de dano em todos os inimigos!%n");
-    } else if (retorno == 7) {
-      System.out.printf(
-          "                                                                          Você procurou, mas nada aconteceu...%n");
-    } else if (retorno == 8) {
-      System.out.printf(
-          "                                                                          O player 1 teve sua DEF recuperada%n");
-    } else if (retorno == 9) {
-      System.out.printf(
-          "                                                                          O player 2 teve sua DEF recuperada%n");
-    } else if (retorno == 10) {
-      System.out.printf(
-          "                                                                          Esse jogador não está no mesmo setor que você.%n");
-    }
-  }
-
   /// Realiza o turno dos inimigos que estiverem dentro do mesmo setor que
   /// qualquer um dos jogadores.
-  private void turnoInimigos(Setor setor, int xSetor, int ySetor) {
+  public void turnoInimigos(Setor setor, int xSetor, int ySetor) {
     int quantidade_inimigos = setor.getQtdInimigos();
     if (quantidade_inimigos > 0) {
       int locxp1 = this.getP1().getLocx();
@@ -349,149 +332,192 @@ public class Gerenciador {
     }
   }
 
-  /// Realiza um turno.
-  private int turno(int locxNinho, int locyNinho, Entrada teclado) {
-    JogadorN p1 = this.getP1();
-    JogadorS p2 = this.getP2();
-    Setor[][] mapa = this.getMapa();
-    int x = 0;
-    int[] PA = new int[1];
-    if (p1.getDef() <= 0) {
-      return -1;
-    } else {
-      int locxp1 = p1.getLocx();
-      int locyp1 = p1.getLocy();
-      int locxp2 = p2.getLocx();
-      int locyp2 = p2.getLocy();
-      Setor setorP1 = mapa[locyp1][locxp1];
-      Setor setorP2 = mapa[locyp2][locxp2];
-      Random aleatorio = new Random();
-      int qtd_inimigos;
-      boolean novos_inimigos = false;
-      boolean juntos = false;
-
-      if (setorP1.getQtdInimigos() <= 0) {
-        System.out.printf("Movimento do Player 1:%n-CIMA: w%n-ESQUERDA: a%n-DIREITA: d%n-BAIXO: s%n");
-
-        while (!(this.movimentarPlayer(p1, teclado.lerEntrada()))) {
-          System.out.printf(
-              "                                                                          Movimento inválido, tente novamente.%n");
-        }
-        if (locxNinho == p1.getLocx() && locyNinho == p1.getLocy()) {
-          return -2;
-        }
-        locxp1 = p1.getLocx();
-        locyp1 = p1.getLocy();
-        setorP1 = mapa[locyp1][locxp1];
-        if (!(setorP1.isVisitado()) && setorP1.getInimigos() == null) {
-          setorP1.setInimigos(new Entidade[MAX_INIMIGOS_NO_SETOR]);
-          qtd_inimigos = aleatorio.nextInt(MAX_INIMIGOS_NO_SETOR) + 1;
-          setorP1.setQtdInimigos(qtd_inimigos);
-          for (x = 0; x < qtd_inimigos; x++) {
-            setorP1.instanciarInimigo(x, ATK_DEF_MAXIMO_INIMIGOS, locyp1, locxp1);
-          }
-          novos_inimigos = true;
-        }
-        this.desenharMapa(locxNinho, locyNinho);
-        System.out
-            .printf("                                                                          PLAYER 1 se moveu!%n");
-        setorP1.setVisitado(true);
-      }
-
-      if (setorP2.getQtdInimigos() <= 0 && p2.getDef() > 0) {
-        System.out.printf("Movimento do Player 2:%n-CIMA: 8%n-ESQUERDA: 4%n-DIREITA: 6%n-BAIXO: 2%n");
-
-        while (!(this.movimentarPlayer(p2, teclado.lerEntrada()))) {
-          System.out.printf(
-              "                                                                          Movimento inválido, tente novamente.%n");
-        }
-
-        if (locxNinho == p2.getLocx() && locyNinho == p2.getLocy()) {
-          return -3;
-        }
-        locxp2 = p2.getLocx();
-        locyp2 = p2.getLocy();
-        setorP2 = mapa[locyp2][locxp2];
-        juntos = (locxp1 == locxp2 && locyp1 == locyp2);
-        if (!(setorP2.isVisitado()) && !(juntos) && setorP2.getInimigos() == null) {
-          setorP2.setInimigos(new Entidade[MAX_INIMIGOS_NO_SETOR]);
-          qtd_inimigos = aleatorio.nextInt(MAX_INIMIGOS_NO_SETOR) + 1;
-          setorP2.setQtdInimigos(qtd_inimigos);
-          for (x = 0; x < qtd_inimigos; x++) {
-            setorP2.instanciarInimigo(x, ATK_DEF_MAXIMO_INIMIGOS, locyp2, locxp2);
-          }
-          novos_inimigos = true;
-        }
-
-        this.desenharMapa(locxNinho, locyNinho);
-        System.out
-            .printf("                                                                          PLAYER 2 se moveu!%n");
-        setorP2.setVisitado(true);
-      }
-
-      locxp1 = p1.getLocx();
-      locyp1 = p1.getLocy();
-      locxp2 = p2.getLocx();
-      locyp2 = p2.getLocy();
-      setorP1 = mapa[locyp1][locxp1];
-      setorP2 = mapa[locyp2][locxp2];
-      PA[0] = 2;
-      if (!novos_inimigos)
-        this.desenharMapa(locxNinho, locyNinho);
-      do {
-        System.out.printf("AÇÕES DO PLAYER 1:%n-ATACAR: a%n-PROCURAR: w%n");
-        this.acaoPlayer(p1, teclado, PA);
-        this.desenharMapa(locxNinho, locyNinho);
-      } while (PA[0] > 0);
-
-      PA[0] = 2;
-      if (p2.getDef() > 0) {
-        if (!novos_inimigos)
-          this.desenharMapa(locxNinho, locxNinho);
-        do {
-          System.out.printf("AÇÕES DO PLAYER 2:%n-ATACAR: 4%n-PROCURAR: 8%n-RECUPERAR: 6%n");
-          this.acaoPlayer(p2, teclado, PA);
-          this.desenharMapa(locxNinho, locyNinho);
-        } while (PA[0] > 0);
-      }
-
-      if (setorP1.getQtdInimigos() > 0 || setorP2.getQtdInimigos() > 0) {
-        System.out.printf(
-            "                                                                          Os inimigos atacaram!%n");
-        this.turnoInimigos(setorP1, locxp1, locyp1);
-        if (!(juntos) && p2.getDef() > 0) {
-          this.turnoInimigos(setorP2, locxp2, locyp2);
-        }
-      }
-      return 0;
+  /// Baseado no retorno de acaoPlayer(), imprime uma mensagem correspondente.
+  private void mensagemAcao(int retorno) {
+    if (retorno == 1) {
+      System.out.printf("                                                                          Ataque efetuado!%n");
+    } else if (retorno == 2) {
+      System.out.printf("                                                                          Errou o ataque!%n");
+    } else if (retorno == 3) {
+      System.out.printf(
+          "                                                                          Este setor é privado. Não foi possível procurar.%n");
+    } else if (retorno == 4) {
+      System.out.printf(
+          "                                                                          Você recuperou 1 de DEF!%n");
+    } else if (retorno == 5) {
+      System.out.printf(
+          "                                                                          Você recuperou 2 de DEF!%n");
+    } else if (retorno == 6) {
+      System.out.printf(
+          "                                                                          Causou 1 de dano em todos os inimigos!%n");
+    } else if (retorno == 7) {
+      System.out.printf(
+          "                                                                          Você procurou, mas nada aconteceu...%n");
+    } else if (retorno == 8) {
+      System.out.printf(
+          "                                                                          O player 1 teve sua DEF recuperada%n");
+    } else if (retorno == 9) {
+      System.out.printf(
+          "                                                                          O player 2 teve sua DEF recuperada%n");
+    } else if (retorno == 10) {
+      System.out.printf(
+          "                                                                          Esse jogador não está no mesmo setor que você.%n");
     }
   }
 
-  /// Executa o jogo.
-  public void jogo(Entrada teclado) {
-    if (this.getP1() == null || this.getP2() == null || this.getMapa() == null) {
+  /// Retorna true enquanto ninguém venceu e ainda restam turnos.
+  public boolean jogoEmAndamento() {
+    return this.getP1() != null && this.getP2() != null && this.getMapa() != null
+        && this.resultado == 0 && this.turnos < 25;
+  }
+
+  public void iniciarTurno() {
+    this.novosInimigos = false;
+    this.juntos = false;
+    this.desenharMapa(locxNinho, locyNinho);
+    System.out.printf("[TURNO %d]%n", this.turnos);
+    if (this.p1.getDef() <= 0) {
+      this.resultado = -1;
+    }
+  }
+
+  public void encerrarTurno() {
+    this.turnos++;
+  }
+
+  public void faseMovimento(Entrada teclado) {
+    if (this.resultado != 0)
+      return;
+    this.movimentoP1(teclado);
+    if (this.resultado != 0)
+      return;
+    this.movimentoP2(teclado);
+  }
+
+  private void movimentoP1(Entrada teclado) {
+    Setor setorP1 = this.mapa[this.p1.getLocy()][this.p1.getLocx()];
+    if (setorP1.getQtdInimigos() > 0)
+      return;
+
+    Random aleatorio = new Random();
+    System.out.printf("Movimento do Player 1:%n-CIMA: w%n-ESQUERDA: a%n-DIREITA: d%n-BAIXO: s%n");
+
+    while (!(this.movimentarPlayer(this.p1, teclado.lerEntrada()))) {
+      System.out.printf(
+          "                                                                          Movimento inválido, tente novamente.%n");
+    }
+    if (locxNinho == this.p1.getLocx() && locyNinho == this.p1.getLocy()) {
+      this.resultado = -2;
       return;
     }
-    int turnos = 0;
+    int locxp1 = this.p1.getLocx();
+    int locyp1 = this.p1.getLocy();
+    setorP1 = this.mapa[locyp1][locxp1];
+    if (!(setorP1.isVisitado()) && setorP1.getInimigos() == null) {
+      setorP1.setInimigos(new Entidade[MAX_INIMIGOS_NO_SETOR]);
+      int qtd_inimigos = aleatorio.nextInt(MAX_INIMIGOS_NO_SETOR) + 1;
+      setorP1.setQtdInimigos(qtd_inimigos);
+      for (int x = 0; x < qtd_inimigos; x++) {
+        setorP1.instanciarInimigo(x, ATK_DEF_MAXIMO_INIMIGOS, locyp1, locxp1);
+      }
+      this.novosInimigos = true;
+    }
+    this.desenharMapa(locxNinho, locyNinho);
+    System.out
+        .printf("                                                                          PLAYER 1 se moveu!%n");
+    setorP1.setVisitado(true);
+  }
+
+  private void movimentoP2(Entrada teclado) {
+    Setor setorP2 = this.mapa[this.p2.getLocy()][this.p2.getLocx()];
+    if (setorP2.getQtdInimigos() > 0 || this.p2.getDef() <= 0)
+      return;
+
     Random aleatorio = new Random();
-    int locxNinho = aleatorio.nextInt(PROPORCAO_MATRIZ);
-    int locyNinho = aleatorio.nextInt(PROPORCAO_MATRIZ);
-    int resultado_turno;
+    System.out.printf("Movimento do Player 2:%n-CIMA: 8%n-ESQUERDA: 4%n-DIREITA: 6%n-BAIXO: 2%n");
 
-    do {
+    while (!(this.movimentarPlayer(this.p2, teclado.lerEntrada()))) {
+      System.out.printf(
+          "                                                                          Movimento inválido, tente novamente.%n");
+    }
+    if (locxNinho == this.p2.getLocx() && locyNinho == this.p2.getLocy()) {
+      this.resultado = -3;
+      return;
+    }
+    int locxp2 = this.p2.getLocx();
+    int locyp2 = this.p2.getLocy();
+    setorP2 = this.mapa[locyp2][locxp2];
+    this.juntos = (this.p1.getLocx() == locxp2 && this.p1.getLocy() == locyp2);
+    if (!(setorP2.isVisitado()) && !(this.juntos) && setorP2.getInimigos() == null) {
+      setorP2.setInimigos(new Entidade[MAX_INIMIGOS_NO_SETOR]);
+      int qtd_inimigos = aleatorio.nextInt(MAX_INIMIGOS_NO_SETOR) + 1;
+      setorP2.setQtdInimigos(qtd_inimigos);
+      for (int x = 0; x < qtd_inimigos; x++) {
+        setorP2.instanciarInimigo(x, ATK_DEF_MAXIMO_INIMIGOS, locyp2, locxp2);
+      }
+      this.novosInimigos = true;
+    }
+    this.desenharMapa(locxNinho, locyNinho);
+    System.out
+        .printf("                                                                          PLAYER 2 se moveu!%n");
+    setorP2.setVisitado(true);
+  }
+
+  public void faseAcoes(Entrada teclado) {
+    if (this.resultado != 0)
+      return;
+
+    int[] PA = new int[1];
+    PA[0] = 2;
+    if (!this.novosInimigos)
       this.desenharMapa(locxNinho, locyNinho);
-      System.out.printf("[TURNO %d]%n", turnos);
-      resultado_turno = turno(locxNinho, locyNinho, teclado);
-      turnos++;
-    } while (resultado_turno >= 0 && turnos < 25);
+    do {
+      System.out.printf("AÇÕES DO PLAYER 1:%n-ATACAR: a%n-PROCURAR: w%n");
+      this.acaoPlayer(this.p1, teclado, PA);
+      this.desenharMapa(locxNinho, locyNinho);
+    } while (PA[0] > 0);
 
-    if (resultado_turno == -1) {
+    PA[0] = 2;
+    if (this.p2.getDef() > 0) {
+      if (!this.novosInimigos)
+        this.desenharMapa(locxNinho, locyNinho);
+      do {
+        System.out.printf("AÇÕES DO PLAYER 2:%n-ATACAR: 4%n-PROCURAR: 8%n-RECUPERAR: 6%n");
+        this.acaoPlayer(this.p2, teclado, PA);
+        this.desenharMapa(locxNinho, locyNinho);
+      } while (PA[0] > 0);
+    }
+  }
+
+  public void faseInimigos() {
+    if (this.resultado != 0)
+      return;
+
+    int locxp1 = this.p1.getLocx();
+    int locyp1 = this.p1.getLocy();
+    int locxp2 = this.p2.getLocx();
+    int locyp2 = this.p2.getLocy();
+    Setor setorP1 = this.mapa[locyp1][locxp1];
+    Setor setorP2 = this.mapa[locyp2][locxp2];
+
+    if (setorP1.getQtdInimigos() > 0 || setorP2.getQtdInimigos() > 0) {
+      System.out.printf(
+          "                                                                          Os inimigos atacaram!%n");
+      this.turnoInimigos(setorP1, locxp1, locyp1);
+      if (!(this.juntos) && this.p2.getDef() > 0) {
+        this.turnoInimigos(setorP2, locxp2, locyp2);
+      }
+    }
+  }
+
+  public void mostrarResultado() {
+    if (this.resultado == -1) {
       System.out.printf(
           "                                                                          [FIM DE JOGO] PLAYER 1 FOI DERROTADO...%n");
-    } else if (resultado_turno == -2) {
+    } else if (this.resultado == -2) {
       System.out.printf(
           "                                                                          VITÓRIA DO PLAYER 1: O player 1 adentrou a fonte de infecção.%n");
-    } else if (resultado_turno == -3) {
+    } else if (this.resultado == -3) {
       System.out.printf(
           "                                                                          VITÓRIA DO PLAYER 2: O player 2 adentrou a fonte de infecção.%n");
     }
